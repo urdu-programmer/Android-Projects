@@ -1,6 +1,6 @@
 package urdu.programmer.dldcalculator;
 
-class Convertor {
+class ConverterClass {
 	public static String reverse(String value) {
 		String reversed = "";
 		for (int i = 0; i < value.length(); i++) {
@@ -96,7 +96,15 @@ class Convertor {
 				num1 = fractional_part * base;
 
 				int b_dig = (int) num1;
-				fraction = fraction + b_dig;
+				if (base == 16) {
+					String hex;
+					hex = hexCode(b_dig + "");
+					fraction = fraction + hex;
+
+				}
+				else {
+					fraction = fraction + b_dig;
+				}
 				fractional_part = num1 - b_dig;
 			} while (fractional_part != 0);
 			return reverse(bin) + "." + fraction;
@@ -107,10 +115,18 @@ class Convertor {
 	/// Binary to all
 	public String binary_to_all(String bin, int base) {
 
-		double num = Double.parseDouble(bin);
-		int whole = (int) num;
+		double num;
+		int whole;
+		String wholeStr;
+		if(isFloat(bin)) {
+			num = Double.parseDouble(bin);
+			whole = (int) num;
+			wholeStr = whole + "";
 
-		String wholeStr = whole + "";
+		}
+		else {
+			wholeStr = bin;
+		}
 		int decimal = 0;
 
 		int i;
@@ -168,6 +184,16 @@ class Convertor {
 			}
 			bin = bin + "." + frac;
 		}
+		for(int j = 0; j < bin.length(); j++) {
+			if(bin.charAt(j) != '0') {
+				String withoutZero = "";
+				for(int k = j; j < bin.length(); k++) {
+					withoutZero = withoutZero + bin.charAt(k);
+					j++;
+				}
+				bin = withoutZero;
+			}
+		}
 		return binary_to_all(bin, base);
 	}
 	
@@ -183,20 +209,23 @@ class Convertor {
 					binDig = "0" + binDig;
 				}
 				bin = bin + binDig;
-				if(hex.charAt(i+1) == '.') {
-					String frac = "";
-					for (int j = ++i; j < hex.length(); j++, i++) {
-						if(hex.charAt(j) != '.') {
-						binDig = decimal_to_all(codeHex((hex.charAt(j) + "")), 2);
-						for (int k = binDig.length(); k < 4; k++) {
+				if(isFloat(hex)){
+					if(hex.charAt(i+1) == '.') {
+						String frac = "";
+						for (int j = ++i; j < hex.length(); j++, i++) {
+							if(hex.charAt(j) != '.') {
+								binDig = decimal_to_all(codeHex((hex.charAt(j) + "")), 2);
+								for (int k = binDig.length(); k < 4; k++) {
 
-							binDig = "0" + binDig;
+									binDig = "0" + binDig;
+								}
+								frac = frac + binDig;
+							}
 						}
-						frac = frac + binDig;
+						bin = bin + "." + frac;
 					}
-					}
-					bin = bin + "." + frac;
 				}
+
 			}
 			
 		}
