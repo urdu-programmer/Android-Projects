@@ -1,6 +1,7 @@
 package urdu.programmer.dldcalculator;
 
-class ConverterClass {
+public class ConverterClass {
+
 	public static String reverse(String value) {
 		String reversed = "";
 		for (int i = 0; i < value.length(); i++) {
@@ -20,60 +21,66 @@ class ConverterClass {
 
 	static String hexCode(String dig) {
 		switch (dig) {
-		case "10":
-			dig = "A";
-			break;
-		case "11":
-			dig = "B";
-			break;
-		case "12":
-			dig = "C";
-			break;
-		case "13":
-			dig = "D";
-			break;
-		case "14":
-			dig = "E";
-			break;
-		case "15":
-			dig = "F";
-			break;
-		default:
-			break;
+			case "10":
+				dig = "A";
+				break;
+			case "11":
+				dig = "B";
+				break;
+			case "12":
+				dig = "C";
+				break;
+			case "13":
+				dig = "D";
+				break;
+			case "14":
+				dig = "E";
+				break;
+			case "15":
+				dig = "F";
+				break;
+			default:
+				break;
 		}
 		return dig;
 	}
-	
+
 	static String codeHex(String dig) {
 		switch (dig) {
-		case "A":
-			dig = "10";
-			break;
-		case "B":
-			dig = "11";
-			break;
-		case "C":
-			dig = "12";
-			break;
-		case "D":
-			dig = "13";
-			break;
-		case "E":
-			dig = "14";
-			break;
-		case "F":
-			dig = "15";
-			break;
-		default:
-			break;
+			case "A":
+			case "a":
+				dig = "10";
+				break;
+			case "B":
+			case "b":
+				dig = "11";
+				break;
+			case "C":
+			case "c":
+				dig = "12";
+				break;
+			case "D":
+			case "d":
+				dig = "13";
+				break;
+			case "E":
+			case "e":
+				dig = "14";
+				break;
+			case "F":
+			case "f":
+				dig = "15";
+
+			default:
+				break;
 		}
 		return dig;
 	}
 	// Decimal to all
-	public String decimal_to_all(String str, int base) {
+	public String decimal_to_all(String str, long base) {
 		//
 		double num = Double.parseDouble(str);
-		int whole_part = (int) num;
+		long whole_part = (long) num;
 		double fractional_part = num - whole_part;
 		String bin = "";
 
@@ -94,8 +101,7 @@ class ConverterClass {
 			double num1;
 			do {
 				num1 = fractional_part * base;
-
-				int b_dig = (int) num1;
+				long b_dig = (long) num1;
 				if (base == 16) {
 					String hex;
 					hex = hexCode(b_dig + "");
@@ -113,36 +119,36 @@ class ConverterClass {
 	}
 
 	/// Binary to all
-	public String binary_to_all(String bin, int base) {
-
+	public String binary_to_all(String bin, long base) {
 		double num;
-		int whole;
+		long whole;
 		String wholeStr;
 		if(isFloat(bin)) {
 			num = Double.parseDouble(bin);
-			whole = (int) num;
+			whole = (long) num;
 			wholeStr = whole + "";
 
 		}
 		else {
 			wholeStr = bin;
 		}
-		int decimal = 0;
+
+		long decimal = 0;
 
 		int i;
 		for (i = 0; i < wholeStr.length(); i++) {
-			int digit = Integer.parseInt(wholeStr.charAt(wholeStr.length() - 1 - i) + "");
-			decimal = decimal + (digit * (int) Math.pow(2, i));
+			long digit = Long.parseLong(wholeStr.charAt(wholeStr.length() - 1 - i) + "");
+			decimal = decimal + (digit * (long) Math.pow(2, i));
 		}
 
 		String deci;
 		i++;
 		if (isFloat(bin)) {
 			double frac = 0;
-			int k = -1;
+			long k = -1;
 			for (int j = i; j < bin.length(); j++) {
 				if (bin.charAt(j) != '.') {
-					int digit = Integer.parseInt(bin.charAt(j) + "");
+					long digit = Long.parseLong(bin.charAt(j) + "");
 					frac = frac + (digit * Math.pow(2, k));
 					k--;
 				}
@@ -154,29 +160,44 @@ class ConverterClass {
 		}
 		return deci;
 	}
-	
-	// octal to all number system
-	public String octal_to_all(String octal, int base) {
-		String bin = "";
-		int whole = (int) Double.parseDouble(octal);
-		String wholeStr = whole + "";
-		int i;
 
-		// convert whole part into binary
+	// octal to all number system
+	public String octal_to_all(String octal, long base) {
+		String bin = "";
+		long whole;
+		String wholeStr;
+		int i;
+		double num;
+
+
+		if(isFloat(octal)) {
+			num = Double.parseDouble(octal);
+			whole = (long) num;
+			wholeStr = whole + "";
+
+		}
+		else {
+			wholeStr = octal;
+		}
+
+		// convert whole part longo binary
 		for (i = 0; i < wholeStr.length(); i++) {
 			String binDig = decimal_to_all((wholeStr.charAt(i) + ""), 2);
-			for (int k = binDig.length(); k < 3; k++) {
+			for (long k = binDig.length(); k < 3; k++) {
 
 				binDig = "0" + binDig;
 			}
 			bin = bin + binDig;
 		}
 
+
+
+
 		if (isFloat(octal)) {
 			String frac = "";
 			for (int j = i + 1; j < octal.length(); j++) {
 				String binDig = decimal_to_all((octal.charAt(j) + ""), 2);
-				for (int k = binDig.length(); k < 3; k++) {
+				for (long k = binDig.length(); k < 3; k++) {
 
 					binDig = "0" + binDig;
 				}
@@ -196,26 +217,29 @@ class ConverterClass {
 		}
 		return binary_to_all(bin, base);
 	}
-	
-	
+
+
 	// hex converter
-	public String hex_to_all(String hex, int base) {
+	public String hex_to_all(String hex, long base) {
 		String bin = "";
 		for(int i = 0; i < hex.length(); i++) {
 			if(hex.charAt(i) != '.') {
 				String binDig = decimal_to_all(codeHex((hex.charAt(i) + "")), 2);
-				for (int k = binDig.length(); k < 4; k++) {
+				for (long k = binDig.length(); k < 4; k++) {
 
 					binDig = "0" + binDig;
 				}
+
 				bin = bin + binDig;
-				if(isFloat(hex)){
+
+
+				if(isFloat(hex)) {
 					if(hex.charAt(i+1) == '.') {
 						String frac = "";
 						for (int j = ++i; j < hex.length(); j++, i++) {
 							if(hex.charAt(j) != '.') {
 								binDig = decimal_to_all(codeHex((hex.charAt(j) + "")), 2);
-								for (int k = binDig.length(); k < 4; k++) {
+								for (long k = binDig.length(); k < 4; k++) {
 
 									binDig = "0" + binDig;
 								}
@@ -227,7 +251,7 @@ class ConverterClass {
 				}
 
 			}
-			
+
 		}
 		return binary_to_all(bin, base);
 	}

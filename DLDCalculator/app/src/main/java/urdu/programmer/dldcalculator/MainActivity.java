@@ -63,6 +63,17 @@ public class MainActivity extends AppCompatActivity {
         }
         return binary;
     }
+    public boolean isOctal(){
+        String oct = screen.getText() + "";
+        boolean octa = true;
+        for(int i = 0; i < oct.length(); i++) {
+            if (!((oct.charAt(i) >= 48) && (oct.charAt(i) <= 55))){
+                octa = false;
+                break;
+            }
+        }
+        return octa;
+    }
     public boolean isHex(){
         String hex = screen.getText() + "";
         boolean hexa = true;
@@ -111,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         bin1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isEmpty() && (isNum() || isBinary())) {
+                if(isEmpty() && isBinary()) {
                     setFalse();
                     bin = true;
                     text.setText("Binary");
@@ -126,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         octa1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(isEmpty() && isNum()){
+                if(isEmpty() && isNum() && isOctal()){
                     setFalse();
                     octa = true;
                     text.setText("Octal");
